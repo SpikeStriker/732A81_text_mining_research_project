@@ -1,0 +1,20 @@
+version: '2'
+services:
+    732a81_text_mining_rp:
+        build:
+          context: .
+          args:
+            - NODE_ENV=local
+          dockerfile: Dockerfile
+        volumes:
+            - ./:/tf/files
+            - D:/GitHub/732A81_Text_Mining/732A81_text_mining/research_project/:/files
+        ports:
+            - 8878:8878
+        container_name:   732a81_text_mining_rp
+        deploy:
+          resources:
+            reservations:
+              devices:
+              - driver: nvidia
+                capabilities: [gpu]

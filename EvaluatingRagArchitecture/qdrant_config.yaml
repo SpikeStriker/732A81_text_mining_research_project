@@ -1,0 +1,16 @@
+# qdrant_config.yaml
+log_level: INFO
+storage:
+  # Store data in /qdrant/storage directory
+  storage_path: "/qdrant/storage"
+
+service:
+  # Listen on all interfaces
+  host: "0.0.0.0"
+  port: 6333
+  http_port: 6333
+  grpc_port: 6334
+
+cluster:
+  # Disable clustering for single node
+  enabled: false

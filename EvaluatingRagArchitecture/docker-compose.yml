@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  # Single all-in-one RAG container
+  rag-eval:
+    build:
+      context: .
+      dockerfile: Dockerfile.rag
+    ports:
+      - "8888:8888"    # Jupyter Notebook
+      - "8001:8001"    # FastAPI LLM server
+      - "8002:8002"    # FastAPI Embedding server
+      - "6333:6333"    # Qdrant (embedded mode)
+    volumes:
+      - ./:/workspace
+      - ./data:/workspace/data
+      - ./models:/workspace/models
+      - qdrant_storage:/qdrant/storage
+    environment:
+      - JUPYTER_TOKEN=rag_eval
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
+
+volumes:
+  qdrant_storage:

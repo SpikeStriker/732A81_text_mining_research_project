@@ -17,8 +17,8 @@ WORKDIR /workspace
 COPY requirements.txt .
 RUN pip install --no-cache-dir --upgrade -r requirements.txt pip
 # Install Qdrant
-RUN pip install qdrant-client
-RUN wget https://github.com/qdrant/qdrant/releases/download/v1.9.0/qdrant-x86_64-unknown-linux-gnu.tar.gz \
+RUN pip install qdrant-client==1.16.2
+RUN wget https://github.com/qdrant/qdrant/releases/download/v1.16.3/qdrant-x86_64-unknown-linux-gnu.tar.gz \
     && tar -xvzf qdrant-x86_64-unknown-linux-gnu.tar.gz \
     && mv qdrant /usr/local/bin/ \
     && rm qdrant-x86_64-unknown-linux-gnu.tar.gz

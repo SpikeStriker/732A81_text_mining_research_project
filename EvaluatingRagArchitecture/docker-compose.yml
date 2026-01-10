@@ -15,7 +15,7 @@ services:
       - ./:/workspace
       - ./data:/workspace/data
       - ./models:/workspace/models
-      - qdrant_storage:/qdrant/storage
+      - ./qdrant_data:/qdrant/storage
     environment:
       - JUPYTER_TOKEN=rag_eval
     deploy:

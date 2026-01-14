@@ -29,4 +29,6 @@ jupyter notebook \
     --port=8888 \
     --no-browser \
     --allow-root \
-    --NotebookApp.token='whatever123'
+    --NotebookApp.token='whatever123' \
+    --NotebookApp.allow_origin='*' \
+    --NotebookApp.disable_check_xsrf=True

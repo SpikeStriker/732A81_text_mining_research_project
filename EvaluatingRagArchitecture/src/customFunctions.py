@@ -18,7 +18,7 @@ def loadfileDB(collection_name, filepath, colname='doc', chunk_size=1000):
         print("Collection already exists and has data. Skipping upload.", points, "points found.")
         return client
 
-    embedding_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+    embedding_model = SentenceTransformer('models/embeddings_model/all_MiniLM_L6_v2/')
     global_id = 0
     
     for chunk_idx, df_chunk in enumerate(pd.read_json(filepath, lines=True, chunksize=chunk_size)):
@@ -50,7 +50,7 @@ def loadfileDB(collection_name, filepath, colname='doc', chunk_size=1000):
 
 def retrieveQueryEmbeddings(query_texts,client,collection_name, colname='doc', k=3,verbose=True):
     from sentence_transformers import SentenceTransformer
-    embedding_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+    embedding_model = SentenceTransformer('models/embeddings_model/all_MiniLM_L6_v2/')
     query_embedding = embedding_model.encode(query_texts).tolist()
     results = client.query_points(collection_name=collection_name,query=query_embedding,limit=k,with_payload=True)
     if verbose:
@@ -100,7 +100,7 @@ def evaluate_answer(generated_answer, ground_truth, query_results, groundContext
     from sklearn.metrics.pairwise import cosine_similarity
     from sentence_transformers import SentenceTransformer
     
-    embedding_model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
+    embedding_model = SentenceTransformer('models/embeddings_model/all_MiniLM_L6_v2/')
     rouge = evaluate.load("rouge")
     bertscore = evaluate.load("bertscore")
     bleu = evaluate.load("bleu")

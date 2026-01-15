@@ -28,7 +28,6 @@ RUN pip uninstall -y enum34
 RUN mkdir -p /workspace/data /workspace/models /qdrant/storage
 COPY qdrant_config.yaml /workspace/
 COPY llm_server.py /workspace/
-COPY embedding_server.py /workspace/
 
 EXPOSE 8888 8001 8002 6333
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

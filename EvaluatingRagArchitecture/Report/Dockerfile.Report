@@ -1,0 +1,16 @@
+FROM rocker/verse:4
+LABEL Uday Jain <uday9k@gmail.com>
+WORKDIR /home/uday
+COPY RPackagesInstall.R RPackagesInstall.R
+RUN sudo apt-get update
+RUN sudo usermod -a -G sudo rstudio-server
+RUN sudo apt-get install texlive-fonts-recommended -y
+RUN sudo apt-get install texlive-latex-extra -y
+RUN sudo apt-get install texlive-full -y
+RUN Rscript RPackagesInstall.R
+RUN PATH="$PATH:$HOME/bin"
+RUN PATH="$PATH:usr/bin"
+ENV PATH="$PATH:$HOME/bin:$PATH:usr/bin"
+RUN echo "setwd(\"/home/uday/\")" > ~/../home/rstudio/.Rprofile
+WORKDIR /home/uday
+EXPOSE 8787

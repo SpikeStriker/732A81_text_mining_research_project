@@ -1,0 +1,64 @@
+\begin{thebibliography}{9}
+\providecommand{\natexlab}[1]{#1}
+
+\bibitem[{Gao et~al.(2023)Gao, Ma, Lin, and Callan}]{gao2023hyde}
+Luyu Gao, Xueguang Ma, Jimmy Lin, and Jamie Callan. 2023.
+\newblock Precise zero-shot dense retrieval without relevance labels.
+\newblock \emph{arXiv preprint arXiv:2212.10496}.
+
+\bibitem[{Jiang et~al.(2023)Jiang, Xu, Araki, and Neubig}]{jiang2023retrieval}
+Zhengbao Jiang, Frank~F Xu, Jun Araki, and Graham Neubig. 2023.
+\newblock Retrieval meets reasoning: A multi-step reasoning approach for
+  knowledge-intensive tasks.
+\newblock \emph{arXiv preprint arXiv:2305.13227}.
+
+\bibitem[{Lewis et~al.(2020)Lewis, Perez, Piktus, Petroni, Karpukhin, Goyal,
+  K{\"u}ttler, Lewis, Yih, Rockt{\"a}schel et~al.}]{lewis2020rag}
+Patrick Lewis, Ethan Perez, Aleksandra Piktus, Fabio Petroni, Vladimir
+  Karpukhin, Naman Goyal, Heinrich K{\"u}ttler, Mike Lewis, Wen-tau Yih, Tim
+  Rockt{\"a}schel, and 1 others. 2020.
+\newblock Retrieval-augmented generation for knowledge-intensive nlp tasks.
+\newblock \emph{Advances in Neural Information Processing Systems},
+  33:9459--9474.
+
+\bibitem[{Lin(2004)}]{lin2004rouge}
+Chin-Yew Lin. 2004.
+\newblock Rouge: A package for automatic evaluation of summaries.
+\newblock In \emph{Text summarization branches out}, pages 74--81.
+
+\bibitem[{Maia et~al.(2018)Maia, Handschuh, Freitas, Davis, McDermott, Zarrouk,
+  and Balahur}]{maia2018fiqa}
+Macedo Maia, Siegfried Handschuh, Andr{\'e} Freitas, Brian Davis, Ross
+  McDermott, Manel Zarrouk, and Alexandra Balahur. 2018.
+\newblock Www'18 open challenge: Financial opinion mining and question
+  answering.
+\newblock In \emph{Companion Proceedings of the The Web Conference 2018}, pages
+  1941--1942.
+
+\bibitem[{Nogueira et~al.(2019)Nogueira, Yang, Lin, and
+  Cho}]{nogueira2019multi}
+Rodrigo Nogueira, Wei Yang, Jimmy Lin, and Kyunghyun Cho. 2019.
+\newblock Multi-stage document ranking with bert.
+\newblock \emph{arXiv preprint arXiv:1910.14424}.
+
+\bibitem[{Papineni et~al.(2002)Papineni, Roukos, Ward, and
+  Zhu}]{papineni2002bleu}
+Kishore Papineni, Salim Roukos, Todd Ward, and Wei-Jing Zhu. 2002.
+\newblock Bleu: a method for automatic evaluation of machine translation.
+\newblock In \emph{Proceedings of the 40th annual meeting of the Association
+  for Computational Linguistics}, pages 311--318.
+
+\bibitem[{Zhang et~al.(2019)Zhang, Kishore, Wu, Weinberger, and
+  Artzi}]{zhang2019bertscore}
+Tianyi Zhang, Varsha Kishore, Felix Wu, Kilian~Q Weinberger, and Yoav Artzi.
+  2019.
+\newblock Bertscore: Evaluating text generation with bert.
+\newblock In \emph{International Conference on Learning Representations}.
+
+\bibitem[{Zhuang and Zuccon(2023)}]{zhuang2023query}
+Shengyao Zhuang and Guido Zuccon. 2023.
+\newblock Query expansion with lexical and ontological information for
+  biomedical information retrieval.
+\newblock \emph{Journal of Biomedical Informatics}, 137:104271.
+
+\end{thebibliography}

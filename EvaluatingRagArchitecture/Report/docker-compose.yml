@@ -1,0 +1,22 @@
+services:
+    liu:
+        build:
+          context: .
+          args:
+            - NODE_ENV=local
+          dockerfile: Dockerfile.Report
+        volumes:
+            - C:/Users/nupur/Desktop/Uday/732A81_text_mining_research_project/EvaluatingRagArchitecture/Report/:/home/uday
+        ports:
+            - 8787:8787
+        container_name: r_container
+        environment:
+          - PASSWORD=pwd
+          - USER=uday
+          - ROOT=TRUE
+        deploy:
+          resources:
+            reservations:
+              devices:
+              - driver: nvidia
+                capabilities: [gpu]

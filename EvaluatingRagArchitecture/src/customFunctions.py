@@ -208,33 +208,68 @@ def visualizeMetrics(metricList, paramValues, paramName):
     plt.tight_layout()
     plt.show()
 
-def plot_single_metric(ax, metric_name, data, title=None, ylabel=None):
+def plot_single_metric(ax, metric_name, mean_data, std_data=None, title=None, ylabel=None):
     import matplotlib.pyplot as plt
     
-    if title is None:
-        title = f'{metric_name} Comparison'
+    if metric_name == "rouge1":
+        title = "Rouge1 Score"
+    elif metric_name == "rouge2":
+        title = "Rouge2 Score"
+    elif metric_name == "rougeL":
+        title = "RougeL Score"
+    elif metric_name == "rougeLsum":
+        title = "RougeLsum Score"
+    elif metric_name == "bertscore_precision":
+        title = "BERTScore Precision"
+    elif metric_name == "bertscore_recall":
+        title = "BERTScore Recall"
+    elif metric_name == "bertscore_f1":
+        title = "BERTScore F1"
+    elif metric_name == "bleu":
+        title = "BLEU Score"
+    elif metric_name == "cosine_similarity":
+        title = "Cosine Similarity"
+    elif metric_name == "avg_retrieval_score":
+        title = "Avg Retrieval Score"
+    elif metric_name == "avg_retrieval_similarity":
+        title = "Avg Retrieval Similarity"
+    else:
+        title = metric_name
+
     if ylabel is None:
         ylabel = metric_name
-    
-    num_archs = len(data)
+    num_archs = len(mean_data)
     colors = plt.cm.Set3(range(num_archs))
-    bars = ax.bar(range(num_archs), data.values, color=colors)
+    if std_data is not None:
+        bars=ax.bar(range(num_archs),mean_data.values,color=colors,yerr=std_data.values,capsize=5,error_kw={'elinewidth':1,'ecolor':'black','alpha':0.7})
+    else:
+        bars = ax.bar(range(num_archs), mean_data.values, color=colors)
     ax.set_xticks(range(num_archs))
-    ax.set_xticklabels(data.index, rotation=45, ha='right', fontsize=8)
+    ax.set_xticklabels(mean_data.index, rotation=45, ha='right', fontsize=8)
     ax.set_title(title, fontsize=10, fontweight='bold')
     ax.set_ylabel(ylabel, fontsize=8)
     ax.grid(True, alpha=0.3, axis='y')
-    for i, v in enumerate(data.values):
-        ax.text(i, v, f'{v:.3f}', ha='center', va='bottom', fontsize=8)
-    ax.set_ylim(data.values.min() * 0.95, data.values.max() * 1.05)
-    
-def compareViz(arch_names, arch_dfs):
+    for i, v in enumerate(mean_data.values):
+        y_pos = v
+        if std_data is not None:
+            y_pos = v + std_data.iloc[i]
+        ax.text(i, y_pos, f'{v:.3f}', ha='center', va='bottom', fontsize=8)
+    if std_data is not None:
+        max_value = (mean_data.values + std_data.values).max()
+        min_value = max(0, (mean_data.values - std_data.values).min())
+        if metric_name.lower().find("bert") == -1:
+            ax.set_ylim(min_value * 0.95 if min_value > 0 else 0, max_value * 1.05)
+        else:
+            ax.set_ylim(min_value * 0.995 if min_value > 0 else 0, max_value * 1.005)
+    else:
+        ax.set_ylim(mean_data.values.min() * 0.95, mean_data.values.max() * 1.05)
+
+def compareViz(arch_names, arch_dfs, error_type='std'):
     import pandas as pd
     import numpy as np
     import matplotlib.pyplot as plt
     import seaborn as sns
     from matplotlib.gridspec import GridSpec
-
     plt.style.use('seaborn-v0_8-darkgrid')
     sns.set_palette("husl")
 
@@ -249,6 +284,14 @@ def compareViz(arch_names, arch_dfs):
     other_metrics = ['bleu', 'cosine_similarity', 'avg_retrieval_score', 'avg_retrieval_similarity']
     all_metrics = rouge_metrics + bertscore_metrics + other_metrics
     mean_scores = combined_data.groupby('Architecture', sort=False)[all_metrics].mean()
+    if error_type == 'std':
+        error_scores = combined_data.groupby('Architecture', sort=False)[all_metrics].std()
+    elif error_type == 'sem':  # Standard Error of the Mean
+        error_scores = combined_data.groupby('Architecture', sort=False)[all_metrics].sem()
+    elif error_type == 'ci':  # 95% Confidence Interval
+        error_scores = combined_data.groupby('Architecture', sort=False)[all_metrics].std() / np.sqrt(combined_data.groupby('Architecture', sort=False)[all_metrics].count()) * 1.96
+    else:
+        error_scores = None
     fig = plt.figure(figsize=(18, 20))
     gs = GridSpec(4, 3, figure=fig, hspace=0.4, wspace=0.3)
     metrics_to_plot = all_metrics[:12]
@@ -256,7 +299,59 @@ def compareViz(arch_names, arch_dfs):
         row = idx // 3
         col = idx % 3
         ax = fig.add_subplot(gs[row, col])
-        plot_single_metric(ax, metric, mean_scores[metric])
-    plt.suptitle('RAG Architecture Comparison Across All Metrics', fontsize=16, fontweight='bold', y=0.95)
+        if error_scores is not None:
+            plot_single_metric(ax, metric, mean_scores[metric], error_scores[metric])
+        else:
+            plot_single_metric(ax, metric, mean_scores[metric])
+    plt.suptitle('RAG Architecture Comparison Across All Metrics', fontsize=16, fontweight='bold', y=0.92)
+    plt.tight_layout()
+    plt.show()
+    return mean_scores, error_scores
+
+def corrMatrix(architectures):
+    import pandas as pd
+    import numpy as np
+    import seaborn as sns
+    import matplotlib.pyplot as plt
+    from scipy.stats import pearsonr
+
+    all_results = pd.DataFrame()
+    for arch_name, df in architectures.items():
+        df_copy = df.copy()
+        df_copy['Architecture'] = arch_name
+        all_results = pd.concat([all_results, df_copy], ignore_index=True)
+    metric_columns = ['rouge1', 'rouge2', 'rougeL', 'rougeLsum','bertscore_precision', 'bertscore_recall', 'bertscore_f1',
+        'bleu', 'cosine_similarity','avg_retrieval_score', 'avg_retrieval_similarity']
+    correlation_matrix = all_results[metric_columns].corr(method='pearson')
+    p_values = pd.DataFrame(index=metric_columns, columns=metric_columns)
+    for i in metric_columns:
+        for j in metric_columns:
+            if i != j:
+                corr, p_val = pearsonr(all_results[i].dropna(), all_results[j].dropna())
+                p_values.loc[i, j] = p_val
+            else:
+                p_values.loc[i, j] = 1.0
+    plt.figure(figsize=(6, 5))
+    mask = np.triu(np.ones_like(correlation_matrix, dtype=bool))
+    cmap = sns.diverging_palette(230, 20, as_cmap=True)
+    sns.heatmap(correlation_matrix,mask=mask,cmap=cmap,vmax=1,vmin=-1, center=0, annot=True,fmt='.2f',square=True, linewidths=0.1,cbar_kws={"shrink": 0.2},annot_kws={"size": 7})
+    pretty_names = {
+        'rouge1': 'ROUGE-1',
+        'rouge2': 'ROUGE-2',
+        'rougeL': 'ROUGE-L',
+        'rougeLsum': 'ROUGE-LSum',
+        'bertscore_precision': 'BERTScore P',
+        'bertscore_recall': 'BERTScore R',
+        'bertscore_f1': 'BERTScore F1',
+        'bleu': 'BLEU',
+        'cosine_similarity': 'Cosine Sim',
+        'avg_retrieval_score': 'Retrieval Score',
+        'avg_retrieval_similarity': 'Retrieval Similarity'
+    }
+    tick_labels = [pretty_names.get(col, col) for col in correlation_matrix.columns]
+    plt.xticks(np.arange(len(tick_labels)) + 0.5, tick_labels, rotation=45, ha='right', fontsize=6)
+    plt.yticks(np.arange(len(tick_labels)) + 0.5, tick_labels, rotation=0, fontsize=6)
+    plt.title('Correlation Matrix of Evaluation Metrics\nAcross All RAG Architectures (n=150 samples)', 
+            fontsize=8, fontweight='bold', pad=10)
     plt.tight_layout()
     plt.show()

@@ -1,16 +1,21 @@
 # 732A81_text_mining_research_project
 
-## Repository Summary
-Coursework and academic project repository with structured lab material, assignments, and research
-deliverables. Contains top-level folders: EvaluatingRagArchitecture, indian_mythology.
+Detailed repository summary generated automatically from available manifests and READMEs. Please review and refine where needed.
 
-## Key Contents
-### Directories
-- `EvaluatingRagArchitecture`
-- `indian_mythology`
+## Files observed in repository root
 
-### Files
-- `.gitignore`
+- README.md
+- indian_mythology
+- EvaluatingRagArchitecture
 
-## Usage
-- Refer to the repository files and scripts for setup and execution instructions.
+
+## Problem statements addressed
+
+- Describe the key problems this repo solves (e.g., reproducible experiments, teaching labs, algorithm implementations).
+
+
+
+## How to contribute
+
+- Open issues for bugs or feature requests.
+- Create PRs against `main` with a clear description.
